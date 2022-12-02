@@ -19,6 +19,12 @@ class CommentSerializer(serializers.ModelSerializer):
         model = CommentModel
         fields = "__all__"
 
+# 댓글 생성
+class CommentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentModel
+        fields = ("content",)
+
 
 # 카테고리
 class CategorySerializer(serializers.ModelSerializer):
