@@ -9,7 +9,8 @@ def inference(input_img):
     
     model = torch.hub.load('ultralytics/yolov5', 'custom', path='models_train/best.pt', force_reload=True)  # 커스텀 학습 모델 사용
     npimg = np.fromstring(input_img, np.uint8)
-    img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+    decode_img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
+    img = cv2.cvtColor(decode_img, cv2.COLOR_BGR2RGB)
 
     results = model(img, size=640)  # inference 추론
 
