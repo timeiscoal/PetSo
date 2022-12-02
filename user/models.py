@@ -28,7 +28,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     name = models.CharField(max_length=100, blank=True, null=True)
-    profile_img = models.ImageField(default="profile/default.jpeg", upload_to="profile", blank=True, force_format="JPEG")
+    profile_img = models.ImageField(default="profile/default.jpeg", upload_to="profile", blank=True)
     introduce = models.TextField(max_length=500, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -59,9 +59,9 @@ class User(AbstractBaseUser):
 
 class Pet(models.Model):
     pet_name = models.CharField(verbose_name="펫이름", max_length=100)
-    pet_age = models.PositiveIntegerField(verbose_name="펫나이", max_length=2, null=True)
+    pet_age = models.PositiveIntegerField(verbose_name="펫나이", null=True)
     pet_sex = models.CharField(verbose_name="펫성별", max_length=100, null=True)
     pet_species = models.CharField(verbose_name="품종명", max_length=100,null=True)
     pet_desc = models.CharField(verbose_name="설명", max_length=200)
-    pet_image = models.ImageField(default="profile/default.jpeg", upload_to="profile/pet", blank=True, force_format="JPEG")
+    pet_image = models.ImageField(default="profile/default.jpeg", upload_to="profile/pet", blank=True)
     
