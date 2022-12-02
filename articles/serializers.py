@@ -10,6 +10,8 @@ class ArticleListSerializer(serializers.ModelSerializer):
         model = ArticleModel
         fields = (
             "title",
+            "pk",
+            "author",
             "image",
         )
         
@@ -35,8 +37,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 # 게시글
 class ArticleSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
-    categorys = CategorySerializer(many=True)
+    #comments = CommentSerializer(many=True)
+    #categorys = CategorySerializer(many=True)
 
 
     class Meta:
