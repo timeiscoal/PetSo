@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # Add Apps
     'corsheaders',
+    'inference',
     'user.apps.UserConfig',
     'articles.apps.ArticlesConfig',
 
