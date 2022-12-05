@@ -9,9 +9,10 @@ class Article(models.Model):
     image = models.ImageField(upload_to="%Y/%m/", blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField('user.User', related_name="like_articles")
     
     def __str__(self):
-        return str(self.title)
+        return f" 게시글 : {self.title} 좋아요 : {self.likes.count()}개"
 
 
 class Comment(models.Model):
@@ -20,6 +21,9 @@ class Comment(models.Model):
     content = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self) -> str:
+        return f"{self.content[:15]}..."
 
 
 class Category(models.Model):

@@ -34,9 +34,14 @@ class ArticlelistView(APIView):
     
          
 class LikeView(APIView):
-    def post(self,request):
-        pass
-
+    def post(self, request, article_id):
+        article = ArticleModel.objects.get(id=article_id)
+        if request.user in article.likes.all():
+            article.likes.remove(request.user)
+            return Response("좋아요 취소", status=status.HTTP_200_OK)
+        else:
+            article.likes.add(request.user)
+            return Response("좋아요", status=status.HTTP_200_OK)
 
 class CommentView(APIView):
 
