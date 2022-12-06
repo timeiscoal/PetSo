@@ -10,6 +10,9 @@ urlpatterns = [
     
     path('user/', include('allauth.urls')),
     
+
+    path('inference/', include('inference.urls')),
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
