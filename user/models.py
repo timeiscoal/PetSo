@@ -58,7 +58,9 @@ class User(AbstractBaseUser):
         return self.is_admin
 
 class Pet(models.Model):
-    user = models.ForeignKey(User, verbose_name="집사", on_delete=models.CASCADE)
+
+    user = models.ForeignKey(User, verbose_name="집사", related_name="user_set", on_delete=models.CASCADE)
+
     pet_name = models.CharField(verbose_name="펫이름", max_length=100)
     pet_age = models.PositiveIntegerField(verbose_name="펫나이", null=True)
     pet_sex = models.CharField(verbose_name="펫성별", max_length=100, null=True)
