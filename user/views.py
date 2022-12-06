@@ -6,6 +6,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from user.models import User
 from user.serializers import ProfileSerializer, ProfileUpdateSerializer, UserSerializer, CustomTokenObtainPairSerializer
 
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
 # 회원가입 API
@@ -27,10 +28,16 @@ class UserView(APIView):
 class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request):
-        profile = User.objects.get(id=request.user.id)
-        serializer = ProfileSerializer(profile)
+    # def get(self, request):
+    #     profile = User.objects.get(id=request.user.id)
+    #     serializer = ProfileSerializer(profile)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = ProfileSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
 
     def put(self, request):
         profile = User.objects.get(id=request.user.id)
@@ -55,6 +62,21 @@ class PetView(APIView):
 
     def delete(self, request):
         pass
+
+# 팔로우
+class FollowView(APIView):
+    def post(self, request, user_id):
+        you = get_object_or_404(User, id=user_id)
+        me = request.user
+        if me in you.followers.all():
+            you.followers.remove(me)
+            return Response("unfollow 했습니다.", status=status.HTTP_200_OK)
+        else:
+            you.followers.add(me)
+            return Response("follow 했습니다.", status=status.HTTP_200_OK)
+
+
+
 
 
 # 커스텀 jwt

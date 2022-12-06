@@ -34,9 +34,12 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    followers = serializers.StringRelatedField(many=True)
+    followings = serializers.StringRelatedField(many=True)
+    
     class Meta:
         model = User
-        fields = ("email", "introduce", "profile_img")
+        fields = ("email", "introduce", "profile_img", "followings", "followers")
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
