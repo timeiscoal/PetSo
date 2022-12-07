@@ -33,19 +33,10 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    followers = serializers.StringRelatedField(many=True)
-    followings = serializers.StringRelatedField(many=True)
-    
-    class Meta:
-        model = User
-        fields = ("email", "introduce", "profile_img", "followings", "followers")
 
 
-class ProfileUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ("introduce", "profile_img")
+
+
 
 class PetSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
@@ -55,3 +46,17 @@ class PetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
         fields = ("user", "pet_name", "pet_age", "pet_sex", "pet_species", "pet_desc", "pet_image")
+
+class ProfileSerializer(serializers.ModelSerializer):
+    followers = serializers.StringRelatedField(many=True)
+    followings = serializers.StringRelatedField(many=True)
+    
+    class Meta:
+        model = User
+        fields = ("name", "email", "introduce", "profile_img", "followings", "followers")
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ("name", "introduce", "profile_img")

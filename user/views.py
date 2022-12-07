@@ -63,7 +63,7 @@ class ProfileView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 
-    def put(self, request):
+    def put(self, request, user_id):
         profile = User.objects.get(id=request.user.id)
         serializer = ProfileUpdateSerializer(profile, data=request.data)
         if serializer.is_valid():
