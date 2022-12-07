@@ -1,4 +1,5 @@
 from django.db import models
+from user.models import User
 
 
 class Article(models.Model):
@@ -8,6 +9,7 @@ class Article(models.Model):
     image = models.ImageField(upload_to=" ", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    bookmarks = models.ManyToManyField(User, related_name="article_bookmarks")
 
 
 class Comment(models.Model):

@@ -6,6 +6,10 @@ from articles.models import Comment as CommentModel
 
 # 게시글 리스트
 class ArticleListSerializer(serializers.ModelSerializer):
+
+    def get_bookmarks(self, obj):
+        return obj.bookmarks.count()
+            
     class Meta:
         model = ArticleModel
         fields = (
