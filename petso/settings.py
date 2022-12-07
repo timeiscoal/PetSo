@@ -57,13 +57,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     
-    #allauth
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
 
     #provider 구글 페이스북 카톡 깃헙 등
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.kakao',
     
     
 
@@ -82,11 +83,8 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
 
-    #allauth
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.kakao',
+
+
 ]
 
 
