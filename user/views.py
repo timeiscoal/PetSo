@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from user.models import User
-from user.serializers import ProfileSerializer, ProfileUpdateSerializer, UserSerializer, CustomTokenObtainPairSerializer
+from user.serializers import ProfileSerializer, ProfileUpdateSerializer, UserSerializer, PetSerializer, CustomTokenObtainPairSerializer
 
 
 from django.shortcuts import render
@@ -75,18 +75,36 @@ class ProfileView(APIView):
 class PetView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
-    def get(self, request):
-        pass
+    def get(self, request, pet_id):
+        pet = get_object_or_404(Pet, id=pet_id)
+        serializer = PetSerializer(pet)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        pass
+        serializer = PetSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request):
-        pass
+    def put(self, request, pet_id):
+        pet = get_object_or_404(Pet, id=pet_id)
+        serializer = PetSerializer(pet)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request):
-        pass
-
+    def delete(self, request, pet_id):
+        pet = get_object_or_404(Pet, id=pet_id)
+        if request.user==pet.user:
+            pet.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response("잘못된 접근입니다", status=status.HTTP_403_FORBIDDEN)
+        
 # 팔로우
 class FollowView(APIView):
     def post(self, request, user_id):

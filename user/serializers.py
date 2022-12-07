@@ -49,6 +49,9 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
 
 class PetSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    
+    def get_user(self, obj):
+        return obj.user.email
     class Meta:
         model = Pet
-        fields = ("pet_name", "pet_age", "pet_sex", "pet_species", "pet_desc", "pet_image")
+        fields = ("user", "pet_name", "pet_age", "pet_sex", "pet_species", "pet_desc", "pet_image")
