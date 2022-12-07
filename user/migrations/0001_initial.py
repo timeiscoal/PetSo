@@ -7,6 +7,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+
 class Migration(migrations.Migration):
 
     initial = True
@@ -46,6 +47,7 @@ class Migration(migrations.Migration):
                 ('pet_desc', models.CharField(max_length=200, verbose_name='설명')),
                 ('pet_image', models.ImageField(blank=True, default='profile/default.jpeg', upload_to='profile/pet')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='집사')),
+
 
             ],
         ),
