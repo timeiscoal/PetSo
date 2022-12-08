@@ -48,30 +48,7 @@ class UserView(APIView):
         user.delete()
         return Response({"message": "회원 탈퇴 완료!"}, status=status.HTTP_200_OK)
 
-# 프로필 조회/수정
-class ProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    # def get(self, request):
-    #     profile = User.objects.get(id=request.user.id)
-    #     serializer = ProfileSerializer(profile)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def get(self, request, user_id):
-        user = get_object_or_404(User, id=user_id)
-        serializer = ProfileSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-
-    def put(self, request, user_id):
-        profile = User.objects.get(id=request.user.id)
-        serializer = ProfileUpdateSerializer(profile, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+# 펫 조회/등록/수정/삭제
 class PetView(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
@@ -104,6 +81,50 @@ class PetView(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("잘못된 접근입니다", status=status.HTTP_403_FORBIDDEN)
+        
+
+# 프로필 조회/수정
+class MyProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    def get(self, request):
+        user = User.objects.get(id=request.user.id)
+        serializer = ProfileSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK) 
+    
+    def put(self, request):
+        profile = User.objects.get(id=request.user.id)
+        serializer = ProfileUpdateSerializer(profile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)      
+
+
+class ProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    # def get(self, request):
+    #     profile = User.objects.get(id=request.user.id)
+    #     serializer = ProfileSerializer(profile)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = ProfileSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+    # def put(self, request, user_id):
+    #     profile = User.objects.get(id=request.user.id)
+    #     serializer = ProfileUpdateSerializer(profile, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data, status=status.HTTP_200_OK)
+    #     else:
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
         
 # 팔로우
 class FollowView(APIView):
