@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, AbstractUser
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -34,6 +34,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    followings = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
     objects = UserManager()
 
@@ -58,7 +59,9 @@ class User(AbstractBaseUser):
         return self.is_admin
 
 class Pet(models.Model):
-    user = models.ForeignKey(User, verbose_name="집사", on_delete=models.CASCADE)
+
+    user = models.ForeignKey(User, verbose_name="집사", related_name="user_set", on_delete=models.CASCADE)
+
     pet_name = models.CharField(verbose_name="펫이름", max_length=100)
     pet_age = models.PositiveIntegerField(verbose_name="펫나이", null=True)
     pet_sex = models.CharField(verbose_name="펫성별", max_length=100, null=True)
