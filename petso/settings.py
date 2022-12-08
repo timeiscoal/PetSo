@@ -41,6 +41,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,7 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Add Apps
-    'corsheaders',
     'inference',
     'user.apps.UserConfig',
     'articles.apps.ArticlesConfig',
@@ -210,3 +211,4 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'user.User'
+

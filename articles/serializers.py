@@ -68,4 +68,5 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ("title",
                   "content",
                   "user",
+                  "author",
                   )
