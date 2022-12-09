@@ -62,9 +62,17 @@ class CategorySerializer(serializers.ModelSerializer):
 # 게시글
 class ArticleSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
     
     def get_user(self, obj):
         return obj.author.name
+
+    def get_likes(self, obj):
+        return obj.likes.count()
+
+    def get_bookmarks(self, obj):
+        return obj.bookmarks.count()    
+
     #comments = CommentSerializer(many=True)
     #categorys = CategorySerializer(many=True)
 
@@ -75,4 +83,10 @@ class ArticleSerializer(serializers.ModelSerializer):
                   "content",
                   "user",
                   "author",
+                  "bookmarks",
+                  "likes",
+                  "created_at",
+                  'image',
+
+
                   )
