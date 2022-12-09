@@ -20,7 +20,9 @@ urlpatterns = [
     path("follow/<int:user_id>/", views.FollowView.as_view(), name="follow_view"),
     path("profile/", views.MyProfileView.as_view(), name="my_profile_view"),
     path("profile/<int:user_id>/", views.ProfileView.as_view(), name="profile_view"),
+    path("pet/", views.PetListView.as_view(), name="pet_view"),
     path("pet/<int:pet_id>/", views.PetView.as_view(), name="pet_view"),
+    path("mypet/", views.MyPetView.as_view(), name="my_pet_view"),
 
     path("google/login/", views.google_login, name="google_login"),
     path("google/callback/", views.google_callback, name="google_callback"),
