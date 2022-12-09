@@ -46,8 +46,8 @@ class PetSerializer(serializers.ModelSerializer):
         return obj.user.name
     class Meta:
         model = Pet
-        fields = ("user", "pet_name", "pet_age", "pet_sex", "pet_species", "pet_desc", "pet_image")
-
+        # fields = ("user", "pet_name", "pet_age", "pet_sex", "pet_species", "pet_desc", "pet_image")
+        fields = '__all__'
 class ProfileSerializer(serializers.ModelSerializer):
     followers = serializers.StringRelatedField(many=True)
     followings = serializers.StringRelatedField(many=True)

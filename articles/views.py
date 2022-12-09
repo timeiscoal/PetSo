@@ -156,3 +156,15 @@ class CommentDetailView(APIView):
         else:
             return Response("권한 없음", status=status.HTTP_403_FORBIDDEN)        
 
+
+
+
+# 나의 아티클 리스트
+class MyarticleView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        articles = user.article_set.all()
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
