@@ -60,7 +60,7 @@ class PetView(APIView):
 
     def put(self, request, pet_id):
         pet = get_object_or_404(Pet, id=pet_id)
-        serializer = PetSerializer(pet)
+        serializer = PetSerializer(pet, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
