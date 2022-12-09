@@ -23,9 +23,6 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self) -> str:
-        return f"{self.content[:15]}..."
-
 
 class Category(models.Model):
     articles = models.ForeignKey("articles.Article", null=True, blank=True, on_delete=models.SET_NULL)

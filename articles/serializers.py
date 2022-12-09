@@ -41,16 +41,26 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
         
 # 댓글
 class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    user_email = serializers.SerializerMethodField()
+
+
+    def get_user(self, obj):
+        return obj.author.name
+
+    def get_user_email(self,obj):
+        return obj.author.email
+
+
     class Meta:
         model = CommentModel
-        fields = "__all__"
+        fields = ("content","user","author" ,"created_at","id","user_email")
 
 # 댓글 생성
 class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentModel
-        fields = ("content",)
-
+        fields = "__all__"
 
 # 카테고리
 class CategorySerializer(serializers.ModelSerializer):
