@@ -5,7 +5,13 @@ from rest_framework.response import Response
 from articles.models import Article as ArticleModel
 from articles.models import Comment as CommentModel
 
+from articles.serializers import ArticleSerializer
+from rest_framework import status, permissions
+from articles.models import Article
+
+
 from articles.serializers import ArticleSerializer,ArticleCreateSerializer,ArticleListSerializer ,CommentSerializer, CommentCreateSerializer
+
 
 
 
@@ -53,6 +59,28 @@ class ArticlelistView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else: 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            
+    # 북마크 등록/취소
+class BookmarkView(APIView):
+    def post(self, request, article_id):
+        article = get_object_or_404(Article, id=article_id)
+        if request.user in article.bookmarks.all():
+            article.bookmarks.remove(request.user)
+            return Response({"message":"북마크 취소 완료!"}, status=status.HTTP_200_OK)
+        else:
+            article.bookmarks.add(request.user)
+            return Response({"message":"북마크 등록 완료!"}, status=status.HTTP_200_OK)
+
+# 나의 북마크 리스트
+class MybookmarkView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        bookmarks = user.article_bookmarks.all()
+        serializer = ArticleSerializer(bookmarks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
          
 class LikeView(APIView):
@@ -86,7 +114,8 @@ class CommentView(APIView):
 
 
 class CommentDetailView(APIView):
-    
+    pass
+
     def get(self, request, article_id ,comment_id):
         aritcle = ArticleModel.objects.get(id=article_id)
         comment = aritcle.comment_set.get(comment_id=comment_id)
@@ -115,3 +144,14 @@ class CommentDetailView(APIView):
             return Response("권한 없음", status=status.HTTP_403_FORBIDDEN)        
 
 
+
+
+# 나의 아티클 리스트
+class MyarticleView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        articles = user.article_set.all()
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
