@@ -8,6 +8,8 @@ from articles.models import Comment as CommentModel
 from articles.serializers import ArticleSerializer
 from rest_framework import status, permissions
 from articles.models import Article
+from articles.models import Category
+from django.db.models import Q
 
 # from restframework_simplejwt.tokens import AccessToken
 
@@ -168,3 +170,17 @@ class MyarticleView(APIView):
         articles = user.article_set.all()
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# 카테고리
+
+class CategoryView(APIView):
+
+    def get(self ,request, category_name):
+        categories = Category.objects.get(name=category_name)
+        articles = ArticleModel.objects.filter(Q(category__id__contains=categories.pk))
+
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+

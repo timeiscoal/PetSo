@@ -62,10 +62,10 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 # 카테고리
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CategoryModel
-        fields = "__all__"
+# class CategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CategoryModel
+#         fields = "__all__"
 
 
 # 게시글
@@ -96,4 +96,5 @@ class ArticleSerializer(serializers.ModelSerializer):
                   "likes",
                   "created_at",
                   'image',
+                  'category',
                   )
