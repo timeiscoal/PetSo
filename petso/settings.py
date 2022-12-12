@@ -48,6 +48,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -70,7 +72,6 @@ INSTALLED_APPS = [
 
 
     # Add Apps
-    'corsheaders',
     'inference',
     'user.apps.UserConfig',
     'articles.apps.ArticlesConfig',
@@ -200,7 +201,7 @@ STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = "/static/"
 
 MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
+MEDIA_URL = "media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -250,8 +251,6 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'user.User'
-
-
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     
@@ -267,3 +266,4 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
