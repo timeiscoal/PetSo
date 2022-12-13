@@ -7,11 +7,16 @@ from articles.models import Comment as CommentModel
 
 # 게시글 리스트
 class ArticleListSerializer(serializers.ModelSerializer):
+
+    def get_bookmarks(self, obj):
+        return obj.bookmarks.count()
+
     user = serializers.SerializerMethodField()
     
     def get_user(self, obj):
         return obj.author.name
     
+
     class Meta:
         model = ArticleModel
         fields = (
@@ -35,16 +40,26 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
         
 # 댓글
 class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    user_email = serializers.SerializerMethodField()
+
+
+    def get_user(self, obj):
+        return obj.author.name
+
+    def get_user_email(self,obj):
+        return obj.author.email
+
+
     class Meta:
         model = CommentModel
-        fields = "__all__"
+        fields = ("content","user","author" ,"created_at","id","user_email")
 
 # 댓글 생성
 class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentModel
-        fields = ("content",)
-
+        fields = "__all__"
 
 # 카테고리
 # class CategorySerializer(serializers.ModelSerializer):
@@ -56,11 +71,18 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 # 게시글
 class ArticleSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
     
     def get_user(self, obj):
         return obj.author.name
-    # comments = CommentSerializer(many=True)
-    # categorys = CategorySerializer(many=True)
+
+    def get_likes(self, obj):
+        return obj.likes.count()
+
+    def get_bookmarks(self, obj):
+        return obj.bookmarks.count()    
+
+
 
 
     class Meta:
@@ -68,4 +90,10 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ("title",
                   "content",
                   "user",
+                  "author",
+                  "bookmarks",
+                  "likes",
+                  "created_at",
+                  'image',
+                  'category',
                   )
