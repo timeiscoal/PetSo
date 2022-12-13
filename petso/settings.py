@@ -41,6 +41,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     'inference',
     'user.apps.UserConfig',
     'articles.apps.ArticlesConfig',
+    'chat',
 
     #restframework
     "rest_framework",
@@ -61,6 +63,17 @@ INSTALLED_APPS = [
 
 
 ]
+
+ASGI_APPLICATION = "petso.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [ # 기본적인 view 접근 권한 지정
@@ -119,6 +132,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        "TEST": {
+            "NAME": BASE_DIR / "db.sqlite3",
+        },
     }
 }
 

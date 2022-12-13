@@ -8,6 +8,7 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('articles/', include('articles.urls')),
     path('inference/', include('inference.urls')),
+    path('chat/', include('chat.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

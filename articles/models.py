@@ -6,10 +6,12 @@ class Article(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
-    image = models.ImageField(upload_to="%Y/%m/", blank=True, null=True)
+    image = models.ImageField(upload_to="%Y_%m/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     likes = models.ManyToManyField(User, related_name="like_articles")
+    # category = models.CharField("카테고리", max_length=150)
+
     
     def __str__(self):
         return str(self.title)
@@ -23,9 +25,5 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Category(models.Model):
-    articles = models.ForeignKey("articles.Article", null=True, blank=True, on_delete=models.SET_NULL)
-    category = models.CharField("카테고리", max_length=150)
 
-    def __str__(self) -> str:
-        return self.category
+    

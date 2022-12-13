@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from articles.models import Article as ArticleModel
-from articles.models import Category as CategoryModel
+# from articles.models import Category as CategoryModel
 from articles.models import Comment as CommentModel
 
 
@@ -47,10 +47,10 @@ class CommentCreateSerializer(serializers.ModelSerializer):
 
 
 # 카테고리
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CategoryModel
-        fields = "__all__"
+# class CategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = CategoryModel
+#         fields = "__all__"
 
 
 # 게시글
@@ -59,8 +59,8 @@ class ArticleSerializer(serializers.ModelSerializer):
     
     def get_user(self, obj):
         return obj.author.name
-    #comments = CommentSerializer(many=True)
-    #categorys = CategorySerializer(many=True)
+    # comments = CommentSerializer(many=True)
+    # categorys = CategorySerializer(many=True)
 
 
     class Meta:
