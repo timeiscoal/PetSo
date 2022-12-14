@@ -8,7 +8,10 @@ from articles.models import Comment as CommentModel
 from articles.serializers import ArticleSerializer
 from rest_framework import status, permissions
 from articles.models import Article
+from articles.models import Category
+from django.db.models import Q
 
+# from restframework_simplejwt.tokens import AccessToken
 
 from articles.serializers import ArticleSerializer,ArticleCreateSerializer,ArticleListSerializer ,CommentSerializer, CommentCreateSerializer
 
@@ -27,7 +30,8 @@ class ArticleView(APIView):
     def put(self, request, article_id):
         article = ArticleModel.objects.get(id=article_id)
         if request.user==article.author:
-            serializer = ArticleCreateSerializer(article, data=request.data)
+            serializer = ArticleCreateSerializer(article, data=request.data,partial=True)
+
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
@@ -104,9 +108,18 @@ class CommentView(APIView):
         return Response(serializers.data , status=status.HTTP_200_OK)
 
     def post(self, request , article_id):
-        serializer = CommentCreateSerializer(data=request.data)
+        datas = request.data
+        datas.update({"author":request.user.id})
+        serializer = CommentCreateSerializer(data=datas)
+        # print(dir(request))
+        #save_data = request.data
+        # save_data.update({'author': request.user.id})
+        # ~~serializer(data=save_dat)
+        # .is_valid()
+
         if serializer.is_valid():
-            create_comment=serializer.save(user=request.user, article_id=article_id)
+            create_comment=serializer.save()
+            print(create_comment)
             serializer = CommentCreateSerializer(create_comment)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
@@ -114,17 +127,20 @@ class CommentView(APIView):
 
 
 class CommentDetailView(APIView):
-    pass
+    
 
-    def get(self, request, article_id ,comment_id):
+    def get(self, request, article_id ,id):
         aritcle = ArticleModel.objects.get(id=article_id)
-        comment = aritcle.comment_set.get(comment_id=comment_id)
+        comment = aritcle.comment_set.get(id=id)
         serialzier = CommentSerializer(comment)
         return Response(serialzier.data, status=status.HTTP_200_OK)
 
-    def put(self, request, article_id ,comment_id):
-        comment = CommentModel.objects.get(pk=comment_id)
-        if request.user == comment.user:
+    def put(self, request, article_id ,id):
+        comment = CommentModel.objects.get(pk=id)
+        datas = request.data
+        datas.update({"author":request.user.id})
+
+        if request.user == comment.author:
             serializer = CommentCreateSerializer(comment, data=request.data)
             if serializer.is_valid():
                 update_comment = serializer.save()
@@ -135,9 +151,9 @@ class CommentDetailView(APIView):
         else:
             return Response("권한 없음",status=status.HTTP_403_FORBIDDEN)
 
-    def delete(self, request, article_id ,comment_id):
-        comment = CommentModel.objects.get(pk=comment_id)
-        if request.user == comment.user:
+    def delete(self, request, article_id ,id):
+        comment = CommentModel.objects.get(pk=id)
+        if request.user == comment.author:
             comment.delete()
             return Response(status=status.HTTP_404_NOT_FOUND)
         else:
@@ -155,3 +171,17 @@ class MyarticleView(APIView):
         articles = user.article_set.all()
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# 카테고리
+
+class CategoryView(APIView):
+
+    def get(self ,request, category_name):
+        categories = Category.objects.get(name=category_name)
+        articles = ArticleModel.objects.filter(Q(category__id__contains=categories.pk))
+
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+
