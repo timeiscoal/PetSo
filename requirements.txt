@@ -88,4 +88,5 @@ urllib3==1.26.13
 wcwidth==0.2.5
 Werkzeug==2.2.2
 zipp==3.11.0
-
+daphne==4.0.0
+channels==4.0.0
