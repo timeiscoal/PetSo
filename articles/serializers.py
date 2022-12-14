@@ -96,4 +96,5 @@ class ArticleSerializer(serializers.ModelSerializer):
                   "created_at",
                   'image',
                   'category',
+                  "id",
                   )
