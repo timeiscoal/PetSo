@@ -181,9 +181,9 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.providers.google import views as google_view
 
 
-
 state = os.environ.get("STATE")
 BASE_URL = 'http://127.0.0.1:8000/'
+
 # GOOGLE_CALLBACK_URI = BASE_URL + 'user/google/callback/'
 GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5501/templates/login.html'
 
