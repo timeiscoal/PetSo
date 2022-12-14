@@ -12,6 +12,7 @@ class Article(models.Model):
     bookmarks = models.ManyToManyField(User, related_name="article_bookmarks")
     likes = models.ManyToManyField(User, related_name="like_articles")
     category = models.ForeignKey("articles.Category", on_delete=models.SET_NULL, null=True)
+
     
 
 
@@ -28,3 +29,4 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
+

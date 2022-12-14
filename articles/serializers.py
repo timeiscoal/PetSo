@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from articles.models import Article as ArticleModel
-from articles.models import Category as CategoryModel
+# from articles.models import Category as CategoryModel
 from articles.models import Comment as CommentModel
 
 
@@ -82,8 +82,7 @@ class ArticleSerializer(serializers.ModelSerializer):
     def get_bookmarks(self, obj):
         return obj.bookmarks.count()    
 
-    #comments = CommentSerializer(many=True)
-    #categorys = CategorySerializer(many=True)
+
 
 
     class Meta:
@@ -97,4 +96,5 @@ class ArticleSerializer(serializers.ModelSerializer):
                   "created_at",
                   'image',
                   'category',
+                  "id",
                   )

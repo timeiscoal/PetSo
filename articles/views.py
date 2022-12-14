@@ -31,6 +31,7 @@ class ArticleView(APIView):
         article = ArticleModel.objects.get(id=article_id)
         if request.user==article.author:
             serializer = ArticleCreateSerializer(article, data=request.data,partial=True)
+
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
