@@ -99,6 +99,15 @@ class MyPetView(APIView):
         pet = user.pet_set.all()
         serializer = PetSerializer(pet, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+# 특정 유저의 펫 모아보기
+class UserPetView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        pet = user.pet_set.all()
+        serializer = PetSerializer(pet, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # 프로필 조회/수정
 class MyProfileView(APIView):
