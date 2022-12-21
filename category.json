@@ -1,0 +1,27 @@
+[   {
+    "model": "articles.category", 
+    "pk": 1, 
+    "fields": {
+        "name": "일상"
+        }
+    },
+
+    {
+    "model": "articles.category", 
+    "pk": 2, 
+    "fields": {
+        "name": "커뮤니티"
+            }
+    },
+
+    {
+    "model": "articles.category", 
+    "pk": 3, 
+    "fields": {
+        "name": "QnA"
+                }
+    }
+
+]
+
+
