@@ -111,9 +111,6 @@ Werkzeug==2.2.2
 wincertstore==0.2
 wrapt==1.14.1
 zipp==3.11.0
-<<<<<<< HEAD
 zope.interface==5.5.2
-=======
 daphne==4.0.0
 channels==4.0.0
->>>>>>> f4a278147f3a68e9cf6f6e1eecc4b048dfac20a6
