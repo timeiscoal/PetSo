@@ -6,7 +6,7 @@ from rest_framework_simplejwt.views import (
 )
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -23,6 +23,7 @@ urlpatterns = [
     path("follow/<int:user_id>/", views.FollowView.as_view(), name="follow_view"),
     path("profile/", views.MyProfileView.as_view(), name="my_profile_view"),
     path("profile/<int:user_id>/", views.ProfileView.as_view(), name="profile_view"),
+    path("<int:user_id>/pet/", views.UserPetView.as_view(), name="user_pet_view"),
     path("pet/", views.PetListView.as_view(), name="pet_view"),
     path("pet/<int:pet_id>/", views.PetView.as_view(), name="pet_view"),
     path("mypet/", views.MyPetView.as_view(), name="my_pet_view"),
@@ -30,8 +31,11 @@ urlpatterns = [
     path("google/login/", views.google_login, name="google_login"),
     path("google/callback/", views.google_callback, name="google_callback"),
     path("google/login/finish/", views.GoogleLogin.as_view(), name="google_login_todjango"),
+
+    path('password_reset/', views.PasswordResetView.as_view(), name='password_reset'),
+    path('password_reset_done/', views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('password_reset_confirm/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password_reset_complete/', views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    
+    # path('send_email/', views.send_email, name='send_email'),
 ]
-    # path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    # path('password_reset_done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    # path('password_reset_confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    # path('password_reset_complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
