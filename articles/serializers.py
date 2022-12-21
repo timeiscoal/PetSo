@@ -1,12 +1,14 @@
 from rest_framework import serializers
 from articles.models import Article as ArticleModel
-# from articles.models import Category as CategoryModel
+from articles.models import Category as CategoryModel
 from articles.models import Comment as CommentModel
+
 
 
 
 # 게시글 리스트
 class ArticleListSerializer(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField()
 
     def get_bookmarks(self, obj):
         return obj.bookmarks.count()
@@ -15,6 +17,9 @@ class ArticleListSerializer(serializers.ModelSerializer):
     
     def get_user(self, obj):
         return obj.author.name
+
+    def get_category(self, obj):
+        return obj.category.name    
     
 
     class Meta:
@@ -24,10 +29,16 @@ class ArticleListSerializer(serializers.ModelSerializer):
             "pk",
             "user",
             "image",
+            "content",
+            "category",
         )
 
 # 게시글 생성
 class ArticleCreateSerializer(serializers.ModelSerializer):
+    category = serializers.SerializerMethodField()
+    
+    def get_category(self, obj):
+        return obj.category.name 
     
     class Meta:
         model = ArticleModel
@@ -35,6 +46,8 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
             "title",
             "image",
             "content",
+            "category",
+
         )        
         
         
@@ -61,17 +74,13 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         model = CommentModel
         fields = "__all__"
 
-# 카테고리
-# class CategorySerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = CategoryModel
-#         fields = "__all__"
-
 
 # 게시글
 class ArticleSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+    bookmarks = serializers.SerializerMethodField()
     
     def get_user(self, obj):
         return obj.author.name
@@ -79,10 +88,11 @@ class ArticleSerializer(serializers.ModelSerializer):
     def get_likes(self, obj):
         return obj.likes.count()
 
+    def get_category(self, obj):
+        return obj.category.name
+
     def get_bookmarks(self, obj):
-        return obj.bookmarks.count()    
-
-
+        return obj.bookmarks.count()
 
 
     class Meta:
