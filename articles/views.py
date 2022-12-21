@@ -9,13 +9,15 @@ from articles.serializers import ArticleSerializer
 from rest_framework import status, permissions
 from articles.models import Article
 from articles.models import Category
+from user.models import User
 from django.db.models import Q
 from rest_framework.exceptions import NotAuthenticated, ParseError, PermissionDenied
 
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.db import transaction
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import viewsets
 
-# from restframework_simplejwt.tokens import AccessToken
 
 from articles.serializers import ArticleSerializer,ArticleCreateSerializer,ArticleListSerializer ,CommentSerializer, CommentCreateSerializer
 from user.serializers import UserSerializer
@@ -23,6 +25,7 @@ from user.serializers import UserSerializer
 
 
 from django.shortcuts import render
+
 
 # 디테일페이지 아티클 유저뷰
 class ArticleUserView(APIView):
@@ -33,7 +36,22 @@ class ArticleUserView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
+# 페이지네이션 적용(한 페이지당 게시물 수)
+class ArticlePagination(PageNumberPagination):  # 👈 PageNumberPagination 상속
+    page_size = 5
+
+
+# 페이지네이션 클래스 상속받은 ArticleViewSet
+class ArticleViewSet(viewsets.ModelViewSet):
+    queryset = Article.objects.all().order_by("-created_at")
+    serializer_class = ArticleSerializer
+    pagination_class = ArticlePagination
+# from restframework_simplejwt.tokens import AccessToken
+
+
 # 게시글 상세페이지_수정,삭제
+
 class ArticleView(APIView):
 
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -210,6 +228,15 @@ class MyarticleView(APIView):
 
     def get(self, request):
         user = request.user
+        articles = user.article_set.all()
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+# 특정 유저의 아티클 리스트
+class UserArticleView(APIView):
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
         articles = user.article_set.all()
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

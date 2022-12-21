@@ -14,6 +14,7 @@ class ArticleListSerializer(serializers.ModelSerializer):
         return obj.bookmarks.count()
 
     user = serializers.SerializerMethodField()
+    category_id = serializers.SerializerMethodField()
     
     def get_user(self, obj):
         return obj.author.name
@@ -21,7 +22,9 @@ class ArticleListSerializer(serializers.ModelSerializer):
     def get_category(self, obj):
         return obj.category.name    
     
-
+    def get_category_id(self, obj):
+        return obj.id
+    
     class Meta:
         model = ArticleModel
         fields = (
@@ -31,6 +34,8 @@ class ArticleListSerializer(serializers.ModelSerializer):
             "image",
             "content",
             "category",
+            "category",
+            #"category_id",
         )
 
 # 게시글 생성
