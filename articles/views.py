@@ -11,16 +11,31 @@ from articles.models import Article
 from articles.models import Category
 from user.models import User
 from django.db.models import Q
+from rest_framework.exceptions import NotAuthenticated, ParseError, PermissionDenied
+
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django.db import transaction
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import viewsets
 
 
 from articles.serializers import ArticleSerializer,ArticleCreateSerializer,ArticleListSerializer ,CommentSerializer, CommentCreateSerializer
-
+from user.serializers import UserSerializer
 
 
 
 from django.shortcuts import render
+
+
+# 디테일페이지 아티클 유저뷰
+class ArticleUserView(APIView):
+    def get(self, request, article_id):
+        article = get_object_or_404(Article, id=article_id)
+        user = article.author
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 
 # 페이지네이션 적용(한 페이지당 게시물 수)
 class ArticlePagination(PageNumberPagination):  # 👈 PageNumberPagination 상속
@@ -35,26 +50,41 @@ class ArticleViewSet(viewsets.ModelViewSet):
 # from restframework_simplejwt.tokens import AccessToken
 
 
-# 아티클 상세페이지_수정,삭제(포스트맨 시험 X) 
+# 게시글 상세페이지_수정,삭제
+
 class ArticleView(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
     def get(self, request, article_id):
         article = ArticleModel.objects.get(id=article_id)
         serializer = ArticleSerializer(article)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def put(self, request, article_id):
-        article = ArticleModel.objects.get(id=article_id)
-        if request.user==article.author:
-            serializer = ArticleCreateSerializer(article, data=request.data,partial=True)
 
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
+            article = ArticleModel.objects.get(id=article_id)
+            if request.user==article.author:
+                serializer = ArticleCreateSerializer(article, data=request.data , partial=True)
+
+                if serializer.is_valid():
+                    category_name = request.data.get("category")
+                    if not category_name:
+                        raise ParseError("카테고리를 선택해주세요.")
+                    try:
+                        with transaction.atomic():
+                                category = Category.objects.get(name=category_name)
+                                create_article = serializer.save(author_id=request.user.id,category=category)
+                                serializer = ArticleCreateSerializer(create_article)
+                                return Response(serializer.data, status=status.HTTP_200_OK)
+                    except Exception:
+                        raise ParseError("카테고리를 찾을 수 없습니다.") 
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response("잘못된 접근입니다", status=status.HTTP_403_FORBIDDEN)
+                return Response("잘못된 접근입니다", status=status.HTTP_403_FORBIDDEN)
         
+
     def delete(self, request, article_id):
         article = get_object_or_404(ArticleModel, id=article_id)
         if request.user==article.author:
@@ -63,24 +93,38 @@ class ArticleView(APIView):
         else:
             return Response("잘못된 접근입니다", status=status.HTTP_403_FORBIDDEN)
             
-     
 
+
+# 게시글 조회, 생성
 class ArticlelistView(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request):
         articles = ArticleModel.objects.all()
         serializer = ArticleListSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
-        serializer = ArticleCreateSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(author=request.user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else: 
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer = ArticleCreateSerializer(data=request.data)
+            if serializer.is_valid():
+                category_name = request.data.get("category")
+                if not category_name:
+                    raise ParseError("카테고리를 선택해주세요.")
+                try:
+                    with transaction.atomic():
+                            category = Category.objects.get(name=category_name)
+                            create_article = serializer.save(author_id=request.user.id,category=category)
+                            serializer = ArticleCreateSerializer(create_article)
+                            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+                except Exception:
+                    raise ParseError("카테고리를 찾을 수 없습니다.")        
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
             
-            
-    # 북마크 등록/취소
+# 북마크 등록/취소
 class BookmarkView(APIView):
     def post(self, request, article_id):
         article = get_object_or_404(Article, id=article_id)
@@ -93,6 +137,7 @@ class BookmarkView(APIView):
 
 # 나의 북마크 리스트
 class MybookmarkView(APIView):
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -112,8 +157,10 @@ class LikeView(APIView):
             article.likes.add(request.user)
             return Response("좋아요", status=status.HTTP_200_OK)
 
-
+# 댓글
 class CommentView(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, article_id):
         article = ArticleModel.objects.get(id=article_id)
@@ -126,11 +173,7 @@ class CommentView(APIView):
         datas = request.data
         datas.update({"author":request.user.id})
         serializer = CommentCreateSerializer(data=datas)
-        # print(dir(request))
-        #save_data = request.data
-        # save_data.update({'author': request.user.id})
-        # ~~serializer(data=save_dat)
-        # .is_valid()
+
 
         if serializer.is_valid():
             create_comment=serializer.save()
@@ -142,8 +185,9 @@ class CommentView(APIView):
 
 
 class CommentDetailView(APIView):
-    
 
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    
     def get(self, request, article_id ,id):
         aritcle = ArticleModel.objects.get(id=article_id)
         comment = aritcle.comment_set.get(id=id)
@@ -179,6 +223,7 @@ class CommentDetailView(APIView):
 
 # 나의 아티클 리스트
 class MyarticleView(APIView):
+
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -207,5 +252,4 @@ class CategoryView(APIView):
 
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        
 
