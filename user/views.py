@@ -99,15 +99,6 @@ class MyPetView(APIView):
         pet = user.pet_set.all()
         serializer = PetSerializer(pet, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-# 특정 유저의 펫 모아보기
-class UserPetView(APIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    def get(self, request, user_id):
-        user = User.objects.get(id=user_id)
-        pet = user.pet_set.all()
-        serializer = PetSerializer(pet, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # 프로필 조회/수정
 class MyProfileView(APIView):
@@ -191,10 +182,10 @@ from allauth.socialaccount.providers.google import views as google_view
 
 
 state = os.environ.get("STATE")
-BASE_URL = 'http://127.0.0.1:8000/'
+BASE_URL = 'http://13.125.224.113/'
 
-# GOOGLE_CALLBACK_URI = BASE_URL + 'user/google/callback/'
-GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5500/templates/login.html'
+# GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5500/templates/login.html'
+GOOGLE_CALLBACK_URI = 'http://petso.tk.s3-website.ap-northeast-2.amazonaws.com/login.html'
 
 def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
