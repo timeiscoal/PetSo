@@ -195,7 +195,7 @@ BASE_URL = 'http://127.0.0.1:8000/'
 
 # GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5500/templates/login.html'
 # GOOGLE_CALLBACK_URI = 'http://petso.tk.s3-website.ap-northeast-2.amazonaws.com/login.html'
-GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5500/templates/login.html'
+GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5500/login.html'
 
 def google_login(request):
     scope = "https://www.googleapis.com/auth/userinfo.email"
