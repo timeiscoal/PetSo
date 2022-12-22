@@ -24,12 +24,6 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
 
-
-BASE_URL = 'http://127.0.0.1:8000/'
-KAKAO_CALLBACK_URI = BASE_URL + 'user/kakao/callback'
-# state = getattr(settings, 'STATE')
-
-
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 
@@ -48,6 +42,13 @@ class UserView(APIView):
         user.delete()
         return Response({"message": "회원 탈퇴 완료!"}, status=status.HTTP_200_OK)
 
+class UserPetView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+        pet = user.pet_set.all()
+        serializer = PetSerializer(pet, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # 펫 조회/수정/삭제
 class PetView(APIView):
@@ -183,6 +184,7 @@ from allauth.socialaccount.providers.google import views as google_view
 
 state = os.environ.get("STATE")
 BASE_URL = 'http://13.125.224.113/'
+# BASE_URL = 'http://127.0.0.1:8000/'
 
 # GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5500/templates/login.html'
 GOOGLE_CALLBACK_URI = 'http://petso.tk.s3-website.ap-northeast-2.amazonaws.com/login.html'
