@@ -192,7 +192,7 @@ from allauth.socialaccount.providers.google import views as google_view
 
 state = os.environ.get("STATE")
 
-BASE_URL = 'http://13.125.224.113/'
+BASE_URL = 'https://api.pet-so.net/'
 # BASE_URL = 'http://127.0.0.1:8000/'
 
 # GOOGLE_CALLBACK_URI = 'http://127.0.0.1:5500/templates/login.html'
