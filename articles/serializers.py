@@ -49,7 +49,7 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
         model = ArticleModel
         fields = (
             "title",
-            "image",
+            
             "content",
             "category",
 
