@@ -59,4 +59,4 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("name", "introduce", "profile_img")
+        fields = ("name", "introduce")
